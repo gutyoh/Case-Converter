@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body>
+    <script type=text/javascript>
+        function upperCase (){ w = document.getElementById('#1').value; var p = w.toUpperCase(); document.getElementById('#1').value = p ; }
+        function lowerCase (){
+            w = document.getElementById('#1').value;
+            var p = w.toLowerCase();
+            document.getElementById('#1').value = p ;
+        }
+
+        function properCase() {
+            w = document.getElementById('#1').value;
+            var str = w;
+            str = str.toLowerCase().split(' ');
+            for (var i = 0; i < str.length; i++) {
+                str[i] = str[i].charAt(0).toUpperCase() + str[i].slice(1);
+            }
+            document.getElementById('#1').value = str.join(" ");
+        }
+
+        function firstLetterUpper(theString) {
+            var newString = theString.toLowerCase().replace(/(^\s*\w|[\.\!\?]\s*\w)/g,function(c){return c.toUpperCase()});
+            return newString;
+        }
+
+        function sentenceCase() {
+            var theString = document.getElementById('#1').value;
+            // alert(theString);
+            var newString = firstLetterUpper(theString);
+            // console.log("Converted: "+newString);
+            document.getElementById('#1').value = newString;
+        }
+
+        function download() {
+            var textToWrite = document.getElementById('#1').value;
+            var textFileAsBlob = new Blob([ textToWrite ], { type: 'text/plain' });
+            var fileNameToSaveAs = "text.txt"; //filename.extension
+
+            var downloadLink = document.createElement("a");
+            downloadLink.download = fileNameToSaveAs;
+            downloadLink.innerHTML = "Download File";
+            if (window.webkitURL != null) {
+                // Chrome allows the link to be clicked without actually adding it to the DOM.
+                downloadLink.href = window.webkitURL.createObjectURL(textFileAsBlob);
+            } else {
+                // Firefox requires the link to be added to the DOM before it can be clicked.
+                downloadLink.href = window.URL.createObjectURL(textFileAsBlob);
+                downloadLink.onclick = destroyClickedElement;
+                downloadLink.style.display = "none";
+                document.body.appendChild(downloadLink);
+            }
+
+            downloadLink.click();
+        }
+
+        var button = document.getElementById('save');
+        button.addEventListener('click', saveTextAsFile);
+
+        function destroyClickedElement(event) {
+            // remove the link from the DOM
+            document.body.removeChild(event.target);
+        }
+
+    </script>
+
+    <div class="title">Case Converter</div>
+    <textarea id="#1"></textarea><br>
+    <button id="upper-case" onclick="upperCase();">Upper Case</button>
+    <button id="lower-case" onclick="lowerCase();">Lower Case</button>
+    <button id="proper-case" onclick="properCase();">Proper Case</button>
+    <button id="sentence-case" onclick="sentenceCase();">Sentence Case</button>
+    <button id="save-text-file" onclick="download();">Save Text File</button>
+</body>
+</html>
